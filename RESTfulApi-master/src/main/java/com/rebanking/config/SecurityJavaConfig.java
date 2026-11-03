@@ -1,6 +1,7 @@
 package com.rebanking.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -16,10 +17,16 @@ public class SecurityJavaConfig extends WebSecurityConfigurerAdapter {
 
     private static String REALM="REBANKING_REALM";
 
+    @Value("${security.admin.password}")
+    private String adminPassword;
+
+    @Value("${security.user.password}")
+    private String userPassword;
+
     @Autowired
     public void configureGlobalSecurity(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication().withUser("admin").password("{noop}admin").roles("ADMIN");
-        auth.inMemoryAuthentication().withUser("user").password("{noop}user").roles("USER");
+        auth.inMemoryAuthentication().withUser("admin").password("{noop}" + adminPassword).roles("ADMIN");
+        auth.inMemoryAuthentication().withUser("user").password("{noop}" + userPassword).roles("USER");
     }
 
     @Override
